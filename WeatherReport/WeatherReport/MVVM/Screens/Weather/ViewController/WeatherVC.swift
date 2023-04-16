@@ -17,12 +17,24 @@ class WeatherVC: UIViewController,NormalAlert {
     @IBOutlet weak var sunriseLbl : UILabel!
     @IBOutlet weak var sunsetLbl : UILabel!
     @IBOutlet weak var humidityLbl : UILabel!
+    @IBOutlet weak var windLbl : UILabel!
+    @IBOutlet weak var pressureLbl : UILabel!
+    @IBOutlet weak var temperatureLbl : UILabel!
     var weatherVM = WeatherVM()
     var weatherModel = WeatherModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.backgroundColor = .clear
+       
+        searchBar.backgroundImage = UIImage()
+        searchBar.barTintColor = .clear
+        searchBar.text = "California"
+        
+        weatherVM.getWeatherDetails(searchPlace: "California")
+        
+      
+      
         displayResponse()
     }
     
@@ -43,24 +55,22 @@ class WeatherVC: UIViewController,NormalAlert {
             print(result)
             self?.weatherModel = result
             DispatchQueue.main.async {
-                let dat = self?.weatherVM.displayDate(dateStr: self?.weatherModel.date ?? 0)
-                self?.dateLbl.text = dat
-                self?.cityLbl.text = self?.weatherModel.name ?? ""
-                let celicus  = self?.weatherModel.main?.temperature ?? 0
-                let measurement = Measurement(value: celicus, unit: UnitTemperature.celsius)
-
-                let measurementFormatter = MeasurementFormatter()
-                measurementFormatter.unitStyle = .short
-                measurementFormatter.numberFormatter.maximumFractionDigits = 0
-                measurementFormatter.unitOptions = .temperatureWithoutUnit
-                let measurementInKelvin = Measurement(value: celicus, unit: UnitTemperature.kelvin)
-                let measurements = measurementInKelvin.converted(to: .celsius)
-              
-                self?.tempLbl.text = measurementFormatter.string(from: measurements)
+               
+                self?.dateLbl.text = self?.weatherVM.date
+                self?.cityLbl.text = self?.weatherVM.cityLbl
                 
-                self?.descTempLbl.text = self?.weatherModel.weather?[0].description ?? ""
+                self?.tempLbl.text = self?.weatherVM.templbl
+                
+                self?.descTempLbl.text = self?.weatherVM.tempDescp
                 let id = self?.weatherModel.weather?[0].icon ?? ""
                 self?.weatherVM.imageDisplay(id:id)
+                self?.pressureLbl.text = self?.weatherVM.pressureLbl
+                self?.humidityLbl.text = self?.weatherVM.humidityLbl
+                self?.sunriseLbl.text = self?.weatherVM.sunriseLbl
+                self?.sunsetLbl.text = self?.weatherVM.sunsetLbl
+                self?.windLbl.text = self?.weatherVM.windLbl
+                self?.temperatureLbl.text = self?.weatherVM.temperatureLbl
+              
                 
                 self?.displayWeather()
             }
@@ -85,7 +95,8 @@ class WeatherVC: UIViewController,NormalAlert {
     }
 }
 extension WeatherVC: UISearchBarDelegate {
-   
+    
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         let searchText = searchBar.text ?? ""
        weatherVM.getWeatherDetails(searchPlace: searchText)

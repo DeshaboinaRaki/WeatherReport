@@ -17,7 +17,8 @@ class WeatherManager: RequestProtocol {
     
     func weatherResponse(place:String,complition:@escaping(Result<WeatherModel?,APIError>)->()){
         path = "/data/2.5/weather"
-        parameter = ["q" :place,"country":"US","appid":"7e363c3e31e00d16a311154cf41fc05e"]
+        let placeStr = place + ",US"
+        parameter = ["q" :placeStr,"appid":Path.appId]
         guard let urlrequest = urlRequest(urlStr: Environment.Development.baseUrl) else {
             return
         }

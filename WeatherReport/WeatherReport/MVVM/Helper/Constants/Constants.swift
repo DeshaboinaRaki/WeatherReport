@@ -9,6 +9,7 @@ import Foundation
 
 class Path: NSObject {
     static var BaseUrl = "https://api.openweathermap.org"
+    static var appId = "7e363c3e31e00d16a311154cf41fc05e"
     
 }
 
